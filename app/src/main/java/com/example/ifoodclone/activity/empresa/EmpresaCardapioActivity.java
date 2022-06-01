@@ -88,7 +88,6 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
     }
 
 
-
     private void configEmpresa() {
         progressBar.setVisibility(View.VISIBLE);
         text_info.setVisibility(View.VISIBLE);
@@ -126,14 +125,15 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
                     recuperaCategorias();
 
                 } else {
-                    progressBar.setVisibility(View.GONE);
                     text_info.setText("Nenhum produto cadastrado.");
+                    progressBar.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                text_info.setText("Erro. Tente atualizar a página.");
+                progressBar.setVisibility(View.GONE);
             }
         });
 
@@ -156,12 +156,18 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
                         idsCategoriaList.add(categoria.getId());
                     }
                     Collections.reverse(idsCategoriaList);
+                    configCardapioList();
+                }else {
+                    text_info.setText("Nenhum produto cadastrado.");
+                    progressBar.setVisibility(View.GONE);
                 }
-                configCardapioList();
+
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                text_info.setText("Erro. Tente atualizar a página.");
+                progressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -175,14 +181,21 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
                     produtoListTemp.add(produto_item);
                 }
             }
-            if(!produtoListTemp.isEmpty()) {
+            if (!produtoListTemp.isEmpty()) {
                 categoriaCardapio.setNome(categoria_item.getNome());
                 categoriaCardapio.setProdutoList(produtoListTemp);
                 categoriaCardapiosList.add(categoriaCardapio);
                 cardapioAdapter.notifyDataSetChanged();
             }
         }
-        progressBar.setVisibility(View.GONE);
+        if(categoriaCardapiosList.size()==0){
+            text_info.setText("Nenhum produto cadastrado.");
+            progressBar.setVisibility(View.GONE);
+        }else{
+            text_info.setText("");
+            progressBar.setVisibility(View.GONE);
+        }
+
     }
 
     private void recuperaFavorito() {
@@ -200,24 +213,17 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
                         }
                     }
                     btn_like.setLiked(favoritosList.contains(empresa.getId()));
-                    progressBar.setVisibility(View.GONE);
-                    text_info.setVisibility(View.GONE);
 
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    progressBar.setVisibility(View.GONE);
-                    text_info.setVisibility(View.GONE);
 
                 }
             });
         } else {
-            progressBar.setVisibility(View.GONE);
-            text_info.setVisibility(View.GONE);
         }
     }
-
 
 
     private void configRV() {
