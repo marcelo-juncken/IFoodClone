@@ -1,5 +1,8 @@
 package com.example.ifoodclone.model;
 
+import com.example.ifoodclone.helper.FirebaseHelper;
+import com.google.firebase.database.DatabaseReference;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +13,7 @@ public class CategoriaCardapio {
     public String getNome() {
         return nome;
     }
+
 
     public void setNome(String nome) {
         this.nome = nome;

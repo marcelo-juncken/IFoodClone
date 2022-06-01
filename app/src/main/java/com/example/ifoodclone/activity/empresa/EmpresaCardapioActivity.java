@@ -2,11 +2,13 @@ package com.example.ifoodclone.activity.empresa;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -14,11 +16,14 @@ import android.widget.TextView;
 
 import com.example.ifoodclone.R;
 import com.example.ifoodclone.activity.autenticacao.LoginActivity;
+import com.example.ifoodclone.adapter.CardapioAdapter;
 import com.example.ifoodclone.helper.FirebaseHelper;
 import com.example.ifoodclone.helper.GetMask;
 import com.example.ifoodclone.model.Categoria;
+import com.example.ifoodclone.model.CategoriaCardapio;
 import com.example.ifoodclone.model.Empresa;
 import com.example.ifoodclone.model.Favorito;
+import com.example.ifoodclone.model.Produto;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,12 +33,23 @@ import com.like.OnLikeListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class EmpresaCardapioActivity extends AppCompatActivity {
 
     private RecyclerView rv_categorias;
+    private CardapioAdapter cardapioAdapter;
+
+    private List<Produto> produtoList = new ArrayList<>();
     private List<Categoria> categoriaList = new ArrayList<>();
+
+    private List<CategoriaCardapio> categoriaCardapiosList = new ArrayList<>();
+
+    private List<String> idsCategoriaList = new ArrayList<>();
+
+    private Favorito favorito = new Favorito();
+    private List<String> favoritosList = new ArrayList<>();
 
     private ImageView img_empresa;
     private TextView text_nome;
@@ -50,8 +66,6 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
 
     private Empresa empresa;
 
-    private Favorito favorito = new Favorito();
-    private List<String> favoritosList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,22 +77,21 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             empresa = (Empresa) bundle.getSerializable("empresaSelecionada");
-            recuperaEmpresa();
+            configEmpresa();
         }
 
         configCliques();
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
+        configRV();
         recuperaFavorito();
+        recuperaProdutos();
+
     }
 
-    private void recuperaEmpresa() {
+
+
+    private void configEmpresa() {
         progressBar.setVisibility(View.VISIBLE);
-        text_toolbar.setVisibility(View.VISIBLE);
+        text_info.setVisibility(View.VISIBLE);
 
         Picasso.get().load(empresa.getUrlLogo()).into(img_empresa);
         text_nome.setText(empresa.getNome());
@@ -94,6 +107,82 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
             text_taxa_entrega.setTextColor(Color.parseColor("#2ED67E"));
         }
 
+    }
+
+
+    private void recuperaProdutos() {
+        produtoList.clear();
+        DatabaseReference produtosRef = FirebaseHelper.getDatabaseReference()
+                .child("produtos")
+                .child(empresa.getId());
+        produtosRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        Produto produto = ds.getValue(Produto.class);
+                        produtoList.add(produto);
+                    }
+                    recuperaCategorias();
+
+                } else {
+                    progressBar.setVisibility(View.GONE);
+                    text_info.setText("Nenhum produto cadastrado.");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void recuperaCategorias() {
+        categoriaList.clear();
+        idsCategoriaList.clear();
+        progressBar.setVisibility(View.VISIBLE);
+        DatabaseReference categoriasRef = FirebaseHelper.getDatabaseReference()
+                .child("categorias")
+                .child(empresa.getId());
+        categoriasRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        Categoria categoria = ds.getValue(Categoria.class);
+                        categoriaList.add(categoria);
+                        idsCategoriaList.add(categoria.getId());
+                    }
+                    Collections.reverse(idsCategoriaList);
+                }
+                configCardapioList();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void configCardapioList() {
+        for (Categoria categoria_item : categoriaList) {
+            List<Produto> produtoListTemp = new ArrayList<>();
+            CategoriaCardapio categoriaCardapio = new CategoriaCardapio();
+            for (Produto produto_item : produtoList) {
+                if (categoria_item.getId().equals(produto_item.getIdCategoria())) {
+                    produtoListTemp.add(produto_item);
+                }
+            }
+            if(!produtoListTemp.isEmpty()) {
+                categoriaCardapio.setNome(categoria_item.getNome());
+                categoriaCardapio.setProdutoList(produtoListTemp);
+                categoriaCardapiosList.add(categoriaCardapio);
+                cardapioAdapter.notifyDataSetChanged();
+            }
+        }
+        progressBar.setVisibility(View.GONE);
     }
 
     private void recuperaFavorito() {
@@ -112,21 +201,31 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
                     }
                     btn_like.setLiked(favoritosList.contains(empresa.getId()));
                     progressBar.setVisibility(View.GONE);
-                    text_toolbar.setVisibility(View.GONE);
+                    text_info.setVisibility(View.GONE);
 
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                     progressBar.setVisibility(View.GONE);
-                    text_toolbar.setVisibility(View.GONE);
+                    text_info.setVisibility(View.GONE);
 
                 }
             });
         } else {
             progressBar.setVisibility(View.GONE);
-            text_toolbar.setVisibility(View.GONE);
+            text_info.setVisibility(View.GONE);
         }
+    }
+
+
+
+    private void configRV() {
+        rv_categorias.setLayoutManager(new LinearLayoutManager(this));
+        rv_categorias.setHasFixedSize(true);
+        cardapioAdapter = new CardapioAdapter(categoriaCardapiosList, this);
+        rv_categorias.setAdapter(cardapioAdapter);
+
     }
 
 
@@ -156,7 +255,7 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
                 favoritosList.remove(empresa.getId());
             }
             favorito.salvar(favoritosList);
-        }else{
+        } else {
             btn_like.setLiked(false);
             startActivity(new Intent(this, LoginActivity.class));
         }
@@ -178,6 +277,7 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
 
         btn_like = findViewById(R.id.btn_like);
         text_toolbar = findViewById(R.id.text_toolbar);
+        text_toolbar.setText("Cardápio");
     }
 
 
