@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ifoodclone.R;
 import com.example.ifoodclone.adapter.CategoriaAdapter;
@@ -29,8 +30,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
 import com.tsuryo.swipeablerv.SwipeableRecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class EmpresaCategoriasActivity extends AppCompatActivity implements CategoriaAdapter.OnClickListener {
@@ -85,7 +89,7 @@ public class EmpresaCategoriasActivity extends AppCompatActivity implements Cate
                             categoriaList.add(categoria);
                         }
                         text_info.setText("");
-                        Collections.reverse(categoriaList);
+                        Collections.sort(categoriaList, (o1, o2) -> Math.toIntExact((o1.getPosicao() - o2.getPosicao())));
                         categoriaAdapter.notifyDataSetChanged();
                         progressBar.setVisibility(View.GONE);
                     } else {
@@ -113,6 +117,13 @@ public class EmpresaCategoriasActivity extends AppCompatActivity implements Cate
 
             Collections.swap(categoriaList, fromPosition,toPosition);
             recyclerView.getAdapter().notifyItemMoved(fromPosition,toPosition);
+
+            long positionTemp;
+            positionTemp = categoriaList.get(fromPosition).getPosicao();
+            categoriaList.get(fromPosition).setPosicao(categoriaList.get(toPosition).getPosicao());
+            categoriaList.get(toPosition).setPosicao(positionTemp);
+            categoriaList.get(fromPosition).salvar();
+            categoriaList.get(toPosition).salvar();
 
             return false;
         }
@@ -201,6 +212,7 @@ public class EmpresaCategoriasActivity extends AppCompatActivity implements Cate
                 if (novaCategoria) {
                     Categoria categoria = new Categoria();
                     categoria.setNome(nomeCategoria);
+                    categoria.setPosicao(System.currentTimeMillis());
                     categoria.salvar();
 
                     categoriaList.add(categoria);

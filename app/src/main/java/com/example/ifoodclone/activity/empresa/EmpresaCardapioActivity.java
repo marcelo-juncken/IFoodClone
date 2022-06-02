@@ -155,7 +155,7 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
                         categoriaList.add(categoria);
                         idsCategoriaList.add(categoria.getId());
                     }
-                    Collections.reverse(idsCategoriaList);
+                    Collections.sort(categoriaList, (o1, o2) -> Math.toIntExact((o1.getPosicao() - o2.getPosicao())));
                     configCardapioList();
                 }else {
                     text_info.setText("Nenhum produto cadastrado.");

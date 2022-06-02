@@ -4,10 +4,14 @@ import com.example.ifoodclone.helper.FirebaseHelper;
 import com.google.firebase.database.DatabaseReference;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class Categoria implements Serializable {
     private String id;
     private String nome;
+    private long posicao;
 
     public Categoria() {
         DatabaseReference categoriaRef = FirebaseHelper.getDatabaseReference();
@@ -44,5 +48,13 @@ public class Categoria implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public long getPosicao() {
+        return posicao;
+    }
+
+    public void setPosicao(long posicao) {
+        this.posicao = posicao;
     }
 }
