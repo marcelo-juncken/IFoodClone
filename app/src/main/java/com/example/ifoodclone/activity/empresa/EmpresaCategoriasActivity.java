@@ -3,7 +3,10 @@ package com.example.ifoodclone.activity.empresa;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -90,7 +93,6 @@ public class EmpresaCategoriasActivity extends AppCompatActivity implements Cate
                         progressBar.setVisibility(View.GONE);
                     }
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
 
@@ -102,11 +104,32 @@ public class EmpresaCategoriasActivity extends AppCompatActivity implements Cate
         }
     }
 
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN |
+            ItemTouchHelper.START | ItemTouchHelper.END,0) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            int fromPosition = viewHolder.getAdapterPosition();
+            int toPosition = target.getAdapterPosition();
+
+            Collections.swap(categoriaList, fromPosition,toPosition);
+            recyclerView.getAdapter().notifyItemMoved(fromPosition,toPosition);
+
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
+    };
+
     private void configRV() {
         rv_categorias.setLayoutManager(new LinearLayoutManager(this));
         rv_categorias.setHasFixedSize(true);
         categoriaAdapter = new CategoriaAdapter(categoriaList, this); // --------- no lugar de anuncio List, aqui passa o endereco da lista. pode ser EstadosList.getList(), por exemplo
         rv_categorias.setAdapter(categoriaAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(rv_categorias);
 
         rv_categorias.setListener(new SwipeLeftRightCallback.Listener() {
             @Override
@@ -222,10 +245,10 @@ public class EmpresaCategoriasActivity extends AppCompatActivity implements Cate
             novaCategoria = false;
 
             showDialog();
-        }else if (acesso == 1){
+        } else if (acesso == 1) {
             Intent intent = new Intent();
             intent.putExtra("categoriaSelecionada", categoria);
-            setResult(RESULT_OK,intent);
+            setResult(RESULT_OK, intent);
             finish();
         }
 

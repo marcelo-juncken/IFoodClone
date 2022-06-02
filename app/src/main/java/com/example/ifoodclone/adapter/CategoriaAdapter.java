@@ -3,6 +3,7 @@ package com.example.ifoodclone.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -35,7 +36,6 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.MyVi
         Categoria categoria = categoriaList.get(position);
 
         holder.text_categoria.setText(categoria.getNome());
-
         holder.itemView.setOnClickListener(v -> onClickListener.OnClick(categoria, position));
     }
 
@@ -51,9 +51,11 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.MyVi
     static class MyViewHolder extends RecyclerView.ViewHolder{
 
         TextView text_categoria;
+        ImageView img_move;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             text_categoria = itemView.findViewById(R.id.text_categoria);
+            img_move = itemView.findViewById(R.id.img_move);
         }
     }
 
