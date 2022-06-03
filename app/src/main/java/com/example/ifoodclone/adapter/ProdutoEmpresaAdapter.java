@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class ProdutoAdapterEmpresa extends RecyclerView.Adapter<ProdutoAdapterEmpresa.MyViewHolder> {
+public class ProdutoEmpresaAdapter extends RecyclerView.Adapter<ProdutoEmpresaAdapter.MyViewHolder> {
 
     private List<Produto> produtoList;
     private Context context;
@@ -31,7 +31,7 @@ public class ProdutoAdapterEmpresa extends RecyclerView.Adapter<ProdutoAdapterEm
     }
 
 
-    public ProdutoAdapterEmpresa(List<Produto> produtoList, Context context, OnClickListener onClickListener) {
+    public ProdutoEmpresaAdapter(List<Produto> produtoList, Context context, OnClickListener onClickListener) {
         this.produtoList = produtoList;
         this.context = context;
         this.onClickListener = onClickListener;

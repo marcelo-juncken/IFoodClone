@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.example.ifoodclone.R;
 import com.example.ifoodclone.adapter.AddMaisAdapter;
-import com.example.ifoodclone.adapter.ProdutoAdapterEmpresa;
 import com.example.ifoodclone.helper.FirebaseHelper;
 import com.example.ifoodclone.model.AddMais;
 import com.example.ifoodclone.model.Produto;
@@ -21,7 +20,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;

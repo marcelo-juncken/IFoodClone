@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import com.example.ifoodclone.DAO.EmpresaDAO;
 import com.example.ifoodclone.DAO.ItemPedidoDAO;
 import com.example.ifoodclone.R;
+import com.example.ifoodclone.activity.usuario.CarrinhoActivity;
 import com.example.ifoodclone.helper.FirebaseHelper;
 import com.example.ifoodclone.helper.GetMask;
 import com.example.ifoodclone.model.Categoria;
@@ -144,7 +146,9 @@ public class EmpresaProdutoDetalhesActivity extends AppCompatActivity {
         itemPedidoDAO.salvar(itemPedido);
 
         if (empresaDAO.getEmpresa() == null) empresaDAO.salvar(empresa);
-        snackbarProdutoAdicionado(itemPedido);
+
+        startActivity(new Intent(this, CarrinhoActivity.class));
+        //snackbarProdutoAdicionado(itemPedido);
     }
 
     private void snackbarProdutoAdicionado(ItemPedido itemPedido) {

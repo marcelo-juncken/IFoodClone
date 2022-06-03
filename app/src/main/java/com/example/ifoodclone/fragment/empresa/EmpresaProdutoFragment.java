@@ -13,13 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ifoodclone.R;
 import com.example.ifoodclone.activity.empresa.EmpresaFormProdutoActivity;
-import com.example.ifoodclone.adapter.ProdutoAdapterEmpresa;
+import com.example.ifoodclone.adapter.ProdutoEmpresaAdapter;
 import com.example.ifoodclone.helper.FirebaseHelper;
-import com.example.ifoodclone.model.Categoria;
 import com.example.ifoodclone.model.Produto;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -33,10 +31,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class EmpresaProdutoFragment extends Fragment implements ProdutoAdapterEmpresa.OnClickListener {
+public class EmpresaProdutoFragment extends Fragment implements ProdutoEmpresaAdapter.OnClickListener {
 
     private SwipeableRecyclerView rv_produtos;
-    private ProdutoAdapterEmpresa produtoAdapterEmpresa;
+    private ProdutoEmpresaAdapter produtoEmpresaAdapter;
     private List<Produto> produtoList = new ArrayList<>();
 
     private ProgressBar progressBar;
@@ -69,8 +67,8 @@ public class EmpresaProdutoFragment extends Fragment implements ProdutoAdapterEm
     private void configRV() {
         rv_produtos.setLayoutManager(new LinearLayoutManager(requireActivity()));
         rv_produtos.setHasFixedSize(true);
-        produtoAdapterEmpresa = new ProdutoAdapterEmpresa(produtoList, getContext(), this); // --------- no lugar de anuncio List, aqui passa o endereco da lista. pode ser EstadosList.getList(), por exemplo
-        rv_produtos.setAdapter(produtoAdapterEmpresa);
+        produtoEmpresaAdapter = new ProdutoEmpresaAdapter(produtoList, getContext(), this); // --------- no lugar de anuncio List, aqui passa o endereco da lista. pode ser EstadosList.getList(), por exemplo
+        rv_produtos.setAdapter(produtoEmpresaAdapter);
 
         rv_produtos.setListener(new SwipeLeftRightCallback.Listener() {
             @Override
@@ -91,12 +89,12 @@ public class EmpresaProdutoFragment extends Fragment implements ProdutoAdapterEm
         builder.setMessage("Deseja excluir o produto selecionado?");
         builder.setNegativeButton("Não", (dialog, which) -> {
             dialog.dismiss();
-            produtoAdapterEmpresa.notifyDataSetChanged();
+            produtoEmpresaAdapter.notifyDataSetChanged();
         });
         builder.setPositiveButton("Sim", (dialog, which) -> {
             produto.remover();
             produtoList.remove(produto);
-            produtoAdapterEmpresa.notifyDataSetChanged();
+            produtoEmpresaAdapter.notifyDataSetChanged();
             if (produtoList.size() == 0) {
                 text_info.setText("Nenhum produto cadastrado.");
             }
@@ -126,7 +124,7 @@ public class EmpresaProdutoFragment extends Fragment implements ProdutoAdapterEm
                         text_info.setText("Nenhum produto cadastrado.");
                     }
                     Collections.reverse(produtoList);
-                    produtoAdapterEmpresa.notifyDataSetChanged();
+                    produtoEmpresaAdapter.notifyDataSetChanged();
                     progressBar.setVisibility(View.GONE);
                 }
 
