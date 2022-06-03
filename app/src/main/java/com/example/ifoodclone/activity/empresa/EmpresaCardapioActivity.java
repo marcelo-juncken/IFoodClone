@@ -41,15 +41,15 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
     private RecyclerView rv_categorias;
     private CardapioAdapter cardapioAdapter;
 
-    private List<Produto> produtoList = new ArrayList<>();
-    private List<Categoria> categoriaList = new ArrayList<>();
+    private final List<Produto> produtoList = new ArrayList<>();
+    private final List<Categoria> categoriaList = new ArrayList<>();
 
-    private List<CategoriaCardapio> categoriaCardapiosList = new ArrayList<>();
+    private final List<CategoriaCardapio> categoriaCardapiosList = new ArrayList<>();
 
-    private List<String> idsCategoriaList = new ArrayList<>();
+    private final List<String> idsCategoriaList = new ArrayList<>();
 
-    private Favorito favorito = new Favorito();
-    private List<String> favoritosList = new ArrayList<>();
+    private final Favorito favorito = new Favorito();
+    private final List<String> favoritosList = new ArrayList<>();
 
     private ImageView img_empresa;
     private TextView text_nome;

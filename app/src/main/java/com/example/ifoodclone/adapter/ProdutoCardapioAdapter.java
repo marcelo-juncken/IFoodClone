@@ -1,6 +1,7 @@
 package com.example.ifoodclone.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ifoodclone.R;
+import com.example.ifoodclone.activity.empresa.EmpresaProdutoDetalhesActivity;
 import com.example.ifoodclone.helper.GetMask;
 import com.example.ifoodclone.model.Produto;
 import com.squareup.picasso.Picasso;
@@ -41,6 +43,11 @@ public class ProdutoCardapioAdapter extends RecyclerView.Adapter<ProdutoCardapio
         holder.textProdutoNome.setText(produto.getNome());
         holder.textProdutoValor.setText(context.getString(R.string.text_valor, GetMask.getValor(produto.getValor())));
 
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, EmpresaProdutoDetalhesActivity.class);
+            intent.putExtra("produtoSelecionado", produto);
+            context.startActivity(intent);
+        });
 
     }
 

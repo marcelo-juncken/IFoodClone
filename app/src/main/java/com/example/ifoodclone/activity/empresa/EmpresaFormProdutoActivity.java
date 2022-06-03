@@ -138,7 +138,7 @@ public class EmpresaFormProdutoActivity extends AppCompatActivity {
                         ocultarTeclado();
 
                         if (produto == null) produto = new Produto();
-
+                        produto.setIdEmpresa(FirebaseHelper.getIdFirebase());
                         produto.setNome(nome);
                         produto.setValor(valor);
                         produto.setValorAntigo(valor_antigo);

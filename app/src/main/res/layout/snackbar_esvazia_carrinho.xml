@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_edit2"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/snack_text_titulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="O carrinho já possui itens de outra loja."
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/snack_text_corpo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Para adicionar este item você precisa esvaziar o carrinho. Deseja esvaziar o carrinho e adicionar esse item?"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/snack_text_titulo" />
+
+    <android.widget.Button
+        android:id="@+id/btn_fechar"
+        android:background="@drawable/bg_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/cor_padrao"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="16dp"
+        android:text="Fechar"
+        app:layout_constraintEnd_toStartOf="@+id/btn_salvar"
+        app:layout_constraintTop_toBottomOf="@+id/snack_text_corpo" />
+
+    <android.widget.Button
+        android:id="@+id/btn_salvar"
+        android:layout_width="wrap_content"
+        android:textColor="@color/white"
+        android:background="@drawable/bg_edit"
+        android:backgroundTint="@color/cor_padrao"
+        android:layout_height="wrap_content"
+        android:text="Esvaziar"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/snack_text_corpo" />
+</androidx.constraintlayout.widget.ConstraintLayout>
