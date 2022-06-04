@@ -42,7 +42,7 @@ public class ItemPedidoDAO {
     public void atualizar(ItemPedido itemPedido) {
         ContentValues cv = new ContentValues();
         cv.put(DbHelper.COLUNA_QUANTIDADE, itemPedido.getQuantidade());
-
+        cv.put(DbHelper.COLUNA_OBSERVACAO, itemPedido.getObservacao());
         try {
             String where = "id=?";
             String[] args = {String.valueOf(itemPedido.getId())};

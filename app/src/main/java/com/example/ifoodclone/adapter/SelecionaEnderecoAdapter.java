@@ -7,6 +7,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ifoodclone.R;
@@ -50,6 +51,10 @@ public class SelecionaEnderecoAdapter extends RecyclerView.Adapter<SelecionaEnde
             holder.radioButton.setChecked(true);
         }
 
+        holder.cl_endereco.setOnClickListener(v -> {
+            onClickListener.OnClicK(endereco);
+            holder.radioButton.setChecked(true);
+        });
         holder.radioButton.setOnClickListener(v -> {
             lastSelectedPosition = holder.getAdapterPosition();
             notifyDataSetChanged();
@@ -70,10 +75,12 @@ public class SelecionaEnderecoAdapter extends RecyclerView.Adapter<SelecionaEnde
         RadioButton radioButton;
         TextView text_logradouro;
         TextView text_endereco;
+        ConstraintLayout cl_endereco;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            cl_endereco = itemView.findViewById(R.id.cl_endereco);
             radioButton = itemView.findViewById(R.id.radioButton);
             text_logradouro = itemView.findViewById(R.id.text_logradouro);
             text_endereco = itemView.findViewById(R.id.text_endereco);

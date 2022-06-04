@@ -52,7 +52,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 " url_imagem TEXT NOT NULL, " +
                 " valor DOUBLE NOT NULL, " +
                 " quantidade INTEGER NOT NULL, " +
-                " observacao TEXT NOT NULL); ";
+                " observacao TEXT); ";
 
         String TABLE_ENTREGA = " CREATE TABLE IF NOT EXISTS " + TABELA_ENTREGA
                 + " (forma_pagamento TEXT NOT NULL, " +
