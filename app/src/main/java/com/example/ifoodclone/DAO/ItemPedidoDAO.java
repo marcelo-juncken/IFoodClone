@@ -30,7 +30,7 @@ public class ItemPedidoDAO {
         cv.put(DbHelper.COLUNA_URL_IMAGEM, itemPedido.getUrlImagem());
         cv.put(DbHelper.COLUNA_VALOR, itemPedido.getValor());
         cv.put(DbHelper.COLUNA_QUANTIDADE, itemPedido.getQuantidade());
-
+        cv.put(DbHelper.COLUNA_OBSERVACAO, itemPedido.getObservacao());
         try {
             write.insert(DbHelper.TABELA_ITEM_PEDIDO, null, cv);
             Log.i("INFO_DB", "onCreate: Sucesso ao salvar a tebela.");
@@ -66,6 +66,7 @@ public class ItemPedidoDAO {
             String url_imagem = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUNA_URL_IMAGEM));
             double valor = cursor.getDouble(cursor.getColumnIndexOrThrow(DbHelper.COLUNA_VALOR));
             int quantidade = cursor.getInt(cursor.getColumnIndexOrThrow(DbHelper.COLUNA_QUANTIDADE));
+            String observacao = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUNA_OBSERVACAO));
 
             ItemPedido itemPedido = new ItemPedido();
             itemPedido.setId(id_local);
@@ -74,6 +75,7 @@ public class ItemPedidoDAO {
             itemPedido.setUrlImagem(url_imagem);
             itemPedido.setValor(valor);
             itemPedido.setQuantidade(quantidade);
+            itemPedido.setObservacao(observacao);
 
             itemPedidoList.add(itemPedido);
 

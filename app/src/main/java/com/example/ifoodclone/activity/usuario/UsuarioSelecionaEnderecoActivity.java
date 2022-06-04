@@ -43,9 +43,14 @@ public class UsuarioSelecionaEnderecoActivity extends AppCompatActivity implemen
         iniciaComponentes();
         configCliques();
         configRV();
-        recuperaEnderecos();
+
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        recuperaEnderecos();
+    }
 
     private void recuperaEnderecos() {
         enderecoList.clear();
@@ -53,7 +58,7 @@ public class UsuarioSelecionaEnderecoActivity extends AppCompatActivity implemen
             DatabaseReference enderecosRef = FirebaseHelper.getDatabaseReference()
                     .child("enderecos")
                     .child(FirebaseHelper.getIdFirebase());
-            enderecosRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            enderecosRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
@@ -112,6 +117,9 @@ public class UsuarioSelecionaEnderecoActivity extends AppCompatActivity implemen
 
     @Override
     public void OnClicK(Endereco endereco) {
-
+        Intent intent = new Intent();
+        intent.putExtra("enderecoSelecionado", endereco);
+        setResult(RESULT_OK,intent);
+        finish();
     }
 }

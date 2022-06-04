@@ -78,6 +78,7 @@ public class UsuarioFormEnderecoActivity extends AppCompatActivity {
                         endereco.setBairro(bairro);
                         endereco.setReferencia(referencia);
                         endereco.salvar();
+                        finish();
 
                         configSalvar(false);
                         ib_salvar.setColorFilter(Color.argb(255, 18, 120, 76));

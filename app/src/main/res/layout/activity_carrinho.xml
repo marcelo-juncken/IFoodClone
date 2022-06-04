@@ -212,7 +212,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Subtotal"
                         android:textAlignment="textEnd"
                         android:textColor="@android:color/black"
                         android:textSize="18sp"
@@ -309,7 +308,7 @@
             android:layout_marginBottom="16dp"
             android:background="@drawable/bg_btn"
             android:backgroundTint="@color/cor_padrao"
-            android:text="Continuar"
+            android:text="Selecione o endereço"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="16sp" />

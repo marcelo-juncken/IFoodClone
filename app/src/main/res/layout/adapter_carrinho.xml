@@ -12,23 +12,26 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:ellipsize="end"
+        android:textStyle="bold"
         android:maxLines="2"
         android:textColor="@android:color/black"
-        app:layout_constraintEnd_toStartOf="@+id/text_qtd"
+        app:layout_constraintEnd_toStartOf="@+id/cardImagem"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="X-Tudo Completo 900g + Coca lata 350 ml" />
 
     <TextView
         android:id="@+id/textTotalProduto"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_marginTop="16dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:textAlignment="textEnd"
         android:textColor="#3D3A40"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/textNomeProduto"
+        app:layout_constraintStart_toStartOf="@+id/text_observacao"
+        app:layout_constraintTop_toBottomOf="@+id/text_observacao"
         tools:text="R$ 19,99" />
 
 
@@ -36,22 +39,21 @@
         android:id="@+id/text_qtd"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:textColor="@color/black"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/cardImagem"
         app:layout_constraintEnd_toStartOf="@+id/cardImagem"
-        tools:text="x1" />
+        tools:text="1x" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardImagem"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         app:cardCornerRadius="10dp"
         app:cardElevation="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -65,14 +67,29 @@
     </androidx.cardview.widget.CardView>
 
 
+    <TextView
+        android:id="@+id/text_observacao"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintEnd_toStartOf="@+id/cardImagem"
+        app:layout_constraintStart_toStartOf="@+id/textNomeProduto"
+        app:layout_constraintTop_toBottomOf="@+id/textNomeProduto"
+        tools:text="Sem picles, cebola e alface. Com molho maionese do chefe.Sem picles, cebola e alface. Com molho maionese do chefe.Sem picles, cebola e alface. Com molho maionese do chefe.Sem picles, cebola e alface. Com molho maionese do chefe.Sem picles, cebola e alface. Com molho maionese do chefe.Sem picles, cebola e alface. Com molho maionese do chefe." />
+
+
     <include
         android:id="@+id/include18"
         layout="@layout/divisor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textTotalProduto" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

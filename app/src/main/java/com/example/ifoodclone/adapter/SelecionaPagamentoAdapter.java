@@ -1,5 +1,6 @@
 package com.example.ifoodclone.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ifoodclone.R;
@@ -42,6 +44,10 @@ public class SelecionaPagamentoAdapter extends RecyclerView.Adapter<SelecionaPag
             holder.radioButton.setChecked(true);
         }
 
+        holder.l_escolha.setOnClickListener(v -> {
+            holder.radioButton.setChecked(true);
+            onClickListener.OnClicK(pagamento);
+        });
         holder.radioButton.setOnClickListener(v -> {
             lastSelectedPosition = holder.getAdapterPosition();
             notifyDataSetChanged();
@@ -61,12 +67,14 @@ public class SelecionaPagamentoAdapter extends RecyclerView.Adapter<SelecionaPag
     static class MyViewHolder extends RecyclerView.ViewHolder {
         RadioButton radioButton;
         TextView text_forma_pagamento;
+        ConstraintLayout l_escolha;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
             radioButton = itemView.findViewById(R.id.radioButton);
             text_forma_pagamento = itemView.findViewById(R.id.text_forma_pagamento);
+            l_escolha = itemView.findViewById(R.id.l_escolha);
         }
     }
 }

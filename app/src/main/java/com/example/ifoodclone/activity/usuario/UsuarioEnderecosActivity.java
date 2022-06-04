@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -118,10 +119,11 @@ public class UsuarioEnderecosActivity extends AppCompatActivity implements Ender
         builder.setPositiveButton("Sim", (dialog, which) -> {
             endereco.remover();
             enderecoList.remove(endereco);
-            enderecoAdapter.notifyDataSetChanged();
             if (enderecoList.size() == 0) {
                 text_info.setText("Nenhum endereço cadastrado.");
             }
+            enderecoAdapter.notifyDataSetChanged();
+
             dialog.dismiss();
         });
         AlertDialog alertdialog = builder.create();

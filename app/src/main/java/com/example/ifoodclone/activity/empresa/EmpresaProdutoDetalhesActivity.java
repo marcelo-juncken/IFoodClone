@@ -1,6 +1,7 @@
 package com.example.ifoodclone.activity.empresa;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -42,6 +44,7 @@ import com.squareup.picasso.Picasso;
 
 public class EmpresaProdutoDetalhesActivity extends AppCompatActivity {
 
+    private static final int REQUEST_CARRINHO = 150;
     private ImageView img_produto;
     private TextView text_nome;
     private TextView text_descricao;
@@ -63,10 +66,14 @@ public class EmpresaProdutoDetalhesActivity extends AppCompatActivity {
     private ItemPedidoDAO itemPedidoDAO;
 
     private int quantidade = 1;
+    private String observacao;
 
     private AlertDialog dialog;
 
     private Snackbar snackbar;
+
+    private EditText edit_observacao;
+    private ConstraintLayout cl_observacao;
 
 
     @Override
@@ -143,11 +150,18 @@ public class EmpresaProdutoDetalhesActivity extends AppCompatActivity {
         itemPedido.setIdItem(produto.getId());
         itemPedido.setUrlImagem(produto.getUrlImagem());
 
+        ocultarTeclado();
+
+        observacao = edit_observacao.getText().toString().trim();
+        if (observacao.isEmpty()) observacao = "";
+        itemPedido.setObservacao(observacao);
+        Log.i("INFOTESTE", "A " + observacao);
         itemPedidoDAO.salvar(itemPedido);
 
         if (empresaDAO.getEmpresa() == null) empresaDAO.salvar(empresa);
 
-        startActivity(new Intent(this, CarrinhoActivity.class));
+        Intent intent = new Intent(this, CarrinhoActivity.class);
+        startActivityForResult(intent, REQUEST_CARRINHO);
         //snackbarProdutoAdicionado(itemPedido);
     }
 
@@ -265,12 +279,28 @@ public class EmpresaProdutoDetalhesActivity extends AppCompatActivity {
         text_total_produto.setText(getString(R.string.text_valor, GetMask.getValor(produto.getValor() * quantidade)));
     }
 
+    private void mostrarTeclado(){
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+    }
+
+    private void ocultarTeclado() {
+        ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+                edit_observacao.getWindowToken(), 0
+        );
+    }
+
     private void configCliques() {
         findViewById(R.id.ib_voltar).setOnClickListener(v -> finish());
         btn_add.setOnClickListener(v -> addQtdItem());
         btn_del.setOnClickListener(v -> delQtdItem());
         text_qtd.setOnClickListener(v -> showDialog());
         btn_adicionar.setOnClickListener(v -> addItemCarrinho());
+
+        cl_observacao.setOnClickListener(v -> {
+            mostrarTeclado();
+            cl_observacao.requestFocus();
+        });
 
     }
 
@@ -290,6 +320,19 @@ public class EmpresaProdutoDetalhesActivity extends AppCompatActivity {
         btn_del = findViewById(R.id.btn_remover);
         btn_add = findViewById(R.id.btn_add);
         btn_adicionar = findViewById(R.id.btn_adicionar);
+        edit_observacao = findViewById(R.id.edit_observacao);
+        cl_observacao = findViewById(R.id.cl_observacao);
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_OK){
+            if (requestCode == REQUEST_CARRINHO){
+                finish();
+            }
+        }
     }
 }

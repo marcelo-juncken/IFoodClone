@@ -22,6 +22,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String COLUNA_TEMPO_MAXIMO = "tempo_maximo";
     public static final String COLUNA_URL_IMAGEM = "url_imagem";
     public static final String COLUNA_QUANTIDADE = "quantidade";
+    public static final String COLUNA_OBSERVACAO = "observacao";
     public static final String COLUNA_TAXA_ENTREGA = "taxa_entrega";
     public static final String COLUNA_FORMA_PAGAMENTO = "forma_pagamento";
     public static final String COLUNA_ENDERECO_LOGRADOURO = "logradouro";
@@ -50,7 +51,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 " nome TEXT NOT NULL, " +
                 " url_imagem TEXT NOT NULL, " +
                 " valor DOUBLE NOT NULL, " +
-                " quantidade INTEGER NOT NULL); ";
+                " quantidade INTEGER NOT NULL, " +
+                " observacao TEXT NOT NULL); ";
 
         String TABLE_ENTREGA = " CREATE TABLE IF NOT EXISTS " + TABELA_ENTREGA
                 + " (forma_pagamento TEXT NOT NULL, " +

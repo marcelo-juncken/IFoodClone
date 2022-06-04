@@ -40,17 +40,24 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.MyView
         ItemPedido itemPedido = itemPedidoList.get(position);
         Picasso.get().load(itemPedido.getUrlImagem()).into(holder.imagemProduto);
         holder.textNomeProduto.setText(itemPedido.getItem());
-        holder.textTotalProduto.setText(context.getString(R.string.text_valor, GetMask.getValor(itemPedido.getValor()*itemPedido.getQuantidade())));
-        holder.text_qtd.setText("x" + itemPedido.getQuantidade());
+        holder.textTotalProduto.setText(context.getString(R.string.text_valor, GetMask.getValor(itemPedido.getValor() * itemPedido.getQuantidade())));
+
+        StringBuilder qtd = new StringBuilder()
+                .append(itemPedido.getQuantidade())
+                .append("x");
+
+        holder.text_qtd.setText(qtd);
+        holder.text_observacao.setText(itemPedido.getObservacao());
         holder.itemView.setOnClickListener(v -> onClickListener.OnClick(itemPedido));
     }
+
 
     @Override
     public int getItemCount() {
         return itemPedidoList.size();
     }
 
-    public interface OnClickListener{
+    public interface OnClickListener {
         void OnClick(ItemPedido itemPedido);
     }
 
@@ -58,6 +65,7 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.MyView
         TextView textNomeProduto;
         TextView textTotalProduto;
         TextView text_qtd;
+        TextView text_observacao;
         ImageView imagemProduto;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -65,6 +73,7 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.MyView
             textNomeProduto = itemView.findViewById(R.id.textNomeProduto);
             textTotalProduto = itemView.findViewById(R.id.textTotalProduto);
             text_qtd = itemView.findViewById(R.id.text_qtd);
+            text_observacao = itemView.findViewById(R.id.text_observacao);
             imagemProduto = itemView.findViewById(R.id.imagemProduto);
         }
     }

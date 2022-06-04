@@ -7,6 +7,7 @@ public class ItemPedido {
     private String urlImagem;
     private Double valor;
     private int quantidade;
+    private String observacao;
 
     public ItemPedido() {
     }
@@ -57,5 +58,13 @@ public class ItemPedido {
 
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public String getObservacao() {
+        return observacao;
+    }
+
+    public void setObservacao(String observacao) {
+        this.observacao = observacao;
     }
 }
