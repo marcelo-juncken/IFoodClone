@@ -1,5 +1,6 @@
 package com.example.ifoodclone.fragment.usuario;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.ifoodclone.R;
+import com.example.ifoodclone.activity.usuario.PedidoDetalheActivity;
 import com.example.ifoodclone.adapter.UsuarioPedidoAdapter;
 import com.example.ifoodclone.helper.FirebaseHelper;
 import com.example.ifoodclone.model.Pedido;
@@ -24,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class UsuarioPedidoAndamentoFragment extends Fragment implements UsuarioPedidoAdapter.OnClickListener {
@@ -41,15 +44,21 @@ public class UsuarioPedidoAndamentoFragment extends Fragment implements UsuarioP
         View view = inflater.inflate(R.layout.fragment_usuario_pedido_andamento, container, false);
 
         iniciaComponentes(view);
-        recuperaPedidos();
+
         configRv();
 
 
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        recuperaPedidos();
+    }
 
     private void recuperaPedidos() {
+
         DatabaseReference pedidosRef = FirebaseHelper.getDatabaseReference()
                 .child("usuarioPedidos")
                 .child(FirebaseHelper.getIdFirebase());
@@ -57,9 +66,13 @@ public class UsuarioPedidoAndamentoFragment extends Fragment implements UsuarioP
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    pedidoList.clear();
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         Pedido pedido = ds.getValue(Pedido.class);
-                        if (pedido != null) {
+                        if (pedido != null &&
+                                pedido.getStatusPedido() != StatusPedido.ENTREGUE &&
+                                pedido.getStatusPedido() != StatusPedido.CANCELADO_USUARIO &&
+                                pedido.getStatusPedido() != StatusPedido.CANCELADO_EMPRESA) {
                             addPedidoList(pedido);
                         }
                     }
@@ -69,6 +82,7 @@ public class UsuarioPedidoAndamentoFragment extends Fragment implements UsuarioP
 
                 }
                 progressBar.setVisibility(View.GONE);
+                Collections.reverse(pedidoList);
                 usuarioPedidoAdapter.notifyDataSetChanged();
             }
 
@@ -79,7 +93,7 @@ public class UsuarioPedidoAndamentoFragment extends Fragment implements UsuarioP
         });
     }
 
-    private void addPedidoList(Pedido pedido){
+    private void addPedidoList(Pedido pedido) {
         if (pedido.getStatusPedido() != StatusPedido.CANCELADO_EMPRESA ||
                 pedido.getStatusPedido() != StatusPedido.CANCELADO_USUARIO ||
                 pedido.getStatusPedido() != StatusPedido.ENTREGUE) {
@@ -106,7 +120,10 @@ public class UsuarioPedidoAndamentoFragment extends Fragment implements UsuarioP
         if (rota == 0) {
 
         } else if (rota == 1) {
-
+            Intent intent = new Intent(getActivity(), PedidoDetalheActivity.class);
+            intent.putExtra("pedidoSelecionado", pedido);
+            intent.putExtra("acesso", "usuario");
+            startActivity(intent);
         }
     }
 }

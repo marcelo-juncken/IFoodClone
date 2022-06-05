@@ -66,13 +66,14 @@ public class UsuarioHomeFragment extends Fragment implements EmpresasAdapter.OnC
 
 
     private void recuperaEmpresas() {
-        empresaList.clear();
+
         DatabaseReference empresasRef = FirebaseHelper.getDatabaseReference()
                 .child("empresas");
         empresasRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    empresaList.clear();
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         Empresa empresa = ds.getValue(Empresa.class);
                         empresaList.add(empresa);

@@ -31,6 +31,7 @@ public class UsuarioPedidoFragment extends Fragment {
         return view;
     }
 
+
     private void configTabsLayout() {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(requireActivity().getSupportFragmentManager());
 

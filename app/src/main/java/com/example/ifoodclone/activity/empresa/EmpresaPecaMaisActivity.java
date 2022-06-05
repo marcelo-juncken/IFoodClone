@@ -48,7 +48,7 @@ public class EmpresaPecaMaisActivity extends AppCompatActivity implements AddMai
     }
 
     private void recuperaProdutos() {
-        produtoList.clear();
+
         if (FirebaseHelper.getAutenticado()) {
             DatabaseReference produtosRef = FirebaseHelper.getDatabaseReference()
                     .child("produtos")
@@ -57,6 +57,7 @@ public class EmpresaPecaMaisActivity extends AppCompatActivity implements AddMai
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
+                        produtoList.clear();
                         for (DataSnapshot ds : snapshot.getChildren()) {
                             Produto produto = ds.getValue(Produto.class);
                             produtoList.add(produto);
@@ -76,7 +77,7 @@ public class EmpresaPecaMaisActivity extends AppCompatActivity implements AddMai
     }
 
     private void recuperaItens() {
-        addMaisList.clear();
+
         DatabaseReference addMaisRef = FirebaseHelper.getDatabaseReference()
                 .child("addMais")
                 .child(FirebaseHelper.getIdFirebase());
@@ -84,6 +85,7 @@ public class EmpresaPecaMaisActivity extends AppCompatActivity implements AddMai
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    addMaisList.clear();
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         addMaisList.add(ds.getValue(String.class));
                     }

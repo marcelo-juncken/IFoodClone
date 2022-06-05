@@ -52,7 +52,6 @@ public class UsuarioSelecionaPagamentoActivity extends AppCompatActivity impleme
     }
 
     private void recuperaPagamentos() {
-        pagamentoList.clear();
         DatabaseReference pagamentosRef = FirebaseHelper.getDatabaseReference()
                 .child("recebimentos")
                 .child(empresaDAO.getEmpresa().getId());
@@ -60,6 +59,7 @@ public class UsuarioSelecionaPagamentoActivity extends AppCompatActivity impleme
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    pagamentoList.clear();
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         Pagamento pagamento = ds.getValue(Pagamento.class);
                         if (pagamento.getStatus()) {

@@ -53,7 +53,7 @@ public class UsuarioEnderecosActivity extends AppCompatActivity implements Ender
     }
 
     private void recuperaEnderecos() {
-        enderecoList.clear();
+
         if (FirebaseHelper.getAutenticado()) {
             DatabaseReference enderecosRef = FirebaseHelper.getDatabaseReference()
                     .child("enderecos")
@@ -62,6 +62,7 @@ public class UsuarioEnderecosActivity extends AppCompatActivity implements Ender
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
+                        enderecoList.clear();
                         for (DataSnapshot ds : snapshot.getChildren()) {
                             Endereco endereco = ds.getValue(Endereco.class);
                             enderecoList.add(endereco);

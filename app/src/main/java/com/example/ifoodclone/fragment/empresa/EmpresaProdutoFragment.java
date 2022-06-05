@@ -105,7 +105,7 @@ public class EmpresaProdutoFragment extends Fragment implements ProdutoEmpresaAd
     }
 
     private void recuperaProdutos() {
-        produtoList.clear();
+
         if (FirebaseHelper.getAutenticado()) {
             progressBar.setVisibility(View.VISIBLE);
             DatabaseReference produtosRef = FirebaseHelper.getDatabaseReference()
@@ -115,6 +115,7 @@ public class EmpresaProdutoFragment extends Fragment implements ProdutoEmpresaAd
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
+                        produtoList.clear();
                         for (DataSnapshot ds : snapshot.getChildren()) {
                             Produto produto = ds.getValue(Produto.class);
                             produtoList.add(produto);

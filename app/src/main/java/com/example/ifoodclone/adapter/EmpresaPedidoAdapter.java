@@ -50,8 +50,8 @@ public class EmpresaPedidoAdapter extends RecyclerView.Adapter<EmpresaPedidoAdap
             holder.btn_status.setEnabled(false);
         }
 
-        if (pedido.getDataPedido() != null) {
-            holder.text_data_pedido.setText(GetMask.getDate(pedido.getDataPedido(), 3));
+        if (pedido.getDataStatusPedido() != null) {
+            holder.text_data_pedido.setText(GetMask.getDate(pedido.getDataStatusPedido(), 3));
         }
 
         holder.text_status_pedido.setText(StatusPedido.getStatus(pedido.getStatusPedido()));

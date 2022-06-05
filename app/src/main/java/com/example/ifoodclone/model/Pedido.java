@@ -4,10 +4,11 @@ import com.example.ifoodclone.helper.FirebaseHelper;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ServerValue;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Pedido {
+public class Pedido implements Serializable {
     private String id;
     private String idCliente;
     private String idEmpresa;
@@ -49,13 +50,34 @@ public class Pedido {
                 .child(getId());
         usuarioRef.setValue(this);
 
-        DatabaseReference dataPedidoUsuarioRef = empresaRef
+        DatabaseReference dataPedidoUsuarioRef = usuarioRef
                 .child("dataPedido");
         dataPedidoUsuarioRef.setValue(ServerValue.TIMESTAMP);
 
-        DatabaseReference dataStatusPedidoUsuarioRef = empresaRef
+        DatabaseReference dataStatusPedidoUsuarioRef = usuarioRef
                 .child("dataStatusPedido");
         dataStatusPedidoUsuarioRef.setValue(ServerValue.TIMESTAMP);
+    }
+
+    public void atualizar(){
+        DatabaseReference empresaRef = FirebaseHelper.getDatabaseReference()
+                .child("empresaPedidos")
+                .child(getIdEmpresa())
+                .child(getId());
+
+        empresaRef.child("dataStatusPedido").setValue(ServerValue.TIMESTAMP);
+
+        empresaRef.child("statusPedido").setValue(getStatusPedido());
+
+
+        DatabaseReference usuarioRef = FirebaseHelper.getDatabaseReference()
+                .child("usuarioPedidos")
+                .child(getIdCliente())
+                .child(getId());
+
+        usuarioRef.child("dataStatusPedido").setValue(ServerValue.TIMESTAMP);
+
+        usuarioRef.child("statusPedido").setValue(getStatusPedido());
     }
 
     public String getId() {

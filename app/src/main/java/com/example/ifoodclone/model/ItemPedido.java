@@ -1,6 +1,8 @@
 package com.example.ifoodclone.model;
 
-public class ItemPedido {
+import java.io.Serializable;
+
+public class ItemPedido implements Serializable {
     private Long id;
     private String idItem;
     private String item;

@@ -247,7 +247,7 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoAdapt
     }
 
     private void recuperaIdsItensAddMais() {
-        produtoList.clear();
+
         DatabaseReference addMaisRef = FirebaseHelper.getDatabaseReference()
                 .child("addMais")
                 .child(empresaDAO.getEmpresa().getId());
@@ -255,6 +255,7 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoAdapt
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    produtoList.clear();
                     List<String> idsItensList = new ArrayList<>();
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         String idProduto = ds.getValue(String.class);

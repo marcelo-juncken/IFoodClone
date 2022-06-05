@@ -118,7 +118,7 @@ public class EmpresaRecebimentosActivity extends AppCompatActivity {
     }
 
     private void recuperaPagamentos() {
-        pagamentoList.clear();
+
         DatabaseReference pagamentosRef = FirebaseHelper.getDatabaseReference()
                 .child("recebimentos")
                 .child(FirebaseHelper.getIdFirebase());
@@ -126,6 +126,7 @@ public class EmpresaRecebimentosActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    pagamentoList.clear();
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         Pagamento pagamento = ds.getValue(Pagamento.class);
                         pagamentoList.add(pagamento);

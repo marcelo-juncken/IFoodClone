@@ -110,7 +110,6 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
 
 
     private void recuperaProdutos() {
-        produtoList.clear();
         DatabaseReference produtosRef = FirebaseHelper.getDatabaseReference()
                 .child("produtos")
                 .child(empresa.getId());
@@ -118,6 +117,7 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    produtoList.clear();
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         Produto produto = ds.getValue(Produto.class);
                         produtoList.add(produto);
@@ -140,8 +140,6 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
     }
 
     private void recuperaCategorias() {
-        categoriaList.clear();
-        idsCategoriaList.clear();
         progressBar.setVisibility(View.VISIBLE);
         DatabaseReference categoriasRef = FirebaseHelper.getDatabaseReference()
                 .child("categorias")
@@ -150,6 +148,8 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    idsCategoriaList.clear();
+                    categoriaList.clear();
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         Categoria categoria = ds.getValue(Categoria.class);
                         categoriaList.add(categoria);
@@ -199,7 +199,6 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
     }
 
     private void recuperaFavorito() {
-        favoritosList.clear();
         if (FirebaseHelper.getAutenticado()) {
             DatabaseReference favoritosRef = FirebaseHelper.getDatabaseReference()
                     .child("favoritos")
@@ -208,6 +207,7 @@ public class EmpresaCardapioActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
+                        favoritosList.clear();
                         for (DataSnapshot ds : snapshot.getChildren()) {
                             favoritosList.add(ds.getValue(String.class));
                         }

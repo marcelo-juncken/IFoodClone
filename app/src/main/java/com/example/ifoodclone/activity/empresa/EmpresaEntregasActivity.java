@@ -56,7 +56,6 @@ public class EmpresaEntregasActivity extends AppCompatActivity {
     }
 
     private void recuperaEntregas() {
-        entregaList.clear();
         if (FirebaseHelper.getAutenticado()) {
             configSalvar(true);
             DatabaseReference recuperaRef = FirebaseHelper.getDatabaseReference()
@@ -66,6 +65,7 @@ public class EmpresaEntregasActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
+                        entregaList.clear();
                         for (DataSnapshot ds : snapshot.getChildren()) {
                             Entrega entrega = ds.getValue(Entrega.class);
                             entregaList.add(entrega);

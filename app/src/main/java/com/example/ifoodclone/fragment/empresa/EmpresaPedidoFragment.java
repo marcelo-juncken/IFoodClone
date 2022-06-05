@@ -32,7 +32,7 @@ public class EmpresaPedidoFragment extends Fragment {
     }
 
     private void configTabsLayout() {
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(requireActivity().getSupportFragmentManager());
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
 
         viewPagerAdapter.addFragment(new EmpresaPedidoAndamentoFragment(), "Em andamento");
         viewPagerAdapter.addFragment(new EmpresaPedidoConcluidoFragment(), "Concluidos");
