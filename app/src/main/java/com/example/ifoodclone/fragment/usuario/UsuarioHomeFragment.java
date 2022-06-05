@@ -45,11 +45,6 @@ public class UsuarioHomeFragment extends Fragment implements EmpresasAdapter.OnC
     private ProgressBar progressBar;
     private TextView text_info;
 
-    private TextView textQtdItemSacola;
-    private TextView textTotalCarrinho;
-    private ItemPedidoDAO itemPedidoDAO;
-    private EmpresaDAO empresaDAO;
-    private ConstraintLayout l_sacola;
 
 
     @Override
@@ -58,11 +53,9 @@ public class UsuarioHomeFragment extends Fragment implements EmpresasAdapter.OnC
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_usuario_home, container, false);
 
-        itemPedidoDAO = new ItemPedidoDAO(view.getContext());
-        empresaDAO = new EmpresaDAO(view.getContext());
 
         iniciaComponentes(view);
-        configCliques();
+
         configRV();
         recuperaEmpresas();
 
@@ -70,28 +63,7 @@ public class UsuarioHomeFragment extends Fragment implements EmpresasAdapter.OnC
 
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        configSacola();
-    }
 
-    private void configSacola() {
-        if (!itemPedidoDAO.getList().isEmpty()) {
-            double totalPedido = itemPedidoDAO.getTotal() + empresaDAO.getEmpresa().getTaxaEntrega();
-
-            l_sacola.setVisibility(View.VISIBLE);
-            textQtdItemSacola.setText(String.valueOf(itemPedidoDAO.getList().size()));
-            textTotalCarrinho.setText(getString(R.string.text_valor, GetMask.getValor(totalPedido)));
-        } else {
-            l_sacola.setVisibility(View.GONE);
-        }
-    }
-
-    private void configCliques() {
-        l_sacola.setOnClickListener(v -> startActivity(new Intent(requireActivity(), CarrinhoActivity.class)));
-
-    }
 
     private void recuperaEmpresas() {
         empresaList.clear();
@@ -137,9 +109,7 @@ public class UsuarioHomeFragment extends Fragment implements EmpresasAdapter.OnC
         rv_empresas = view.findViewById(R.id.rv_empresas);
         progressBar = view.findViewById(R.id.progressBar);
         text_info = view.findViewById(R.id.text_info);
-        textQtdItemSacola = view.findViewById(R.id.textQtdItemSacola);
-        textTotalCarrinho = view.findViewById(R.id.textTotalCarrinho);
-        l_sacola = view.findViewById(R.id.l_sacola);
+
 
     }
 

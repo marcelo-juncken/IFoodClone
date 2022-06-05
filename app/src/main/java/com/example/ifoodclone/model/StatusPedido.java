@@ -3,7 +3,7 @@ package com.example.ifoodclone.model;
 public enum StatusPedido {
     ENTREGUE, PENDENTE, PREPARACAO, SAIU_ENTREGA, CANCELADO_EMPRESA, CANCELADO_USUARIO;
 
-    public String getStatus(StatusPedido statusPedido) {
+    public static String getStatus(StatusPedido statusPedido) {
         String status;
 
         switch (statusPedido) {
