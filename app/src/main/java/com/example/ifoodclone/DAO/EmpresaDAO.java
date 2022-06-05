@@ -31,9 +31,7 @@ public class EmpresaDAO {
 
         try {
             write.insert(DbHelper.TABELA_EMPRESA, null, cv);
-            Log.i("INFO_DB", "onCreate: Sucesso ao salvar a tebela.");
         } catch (Exception e) {
-            Log.i("INFO_DB", "onCreate: Erro ao salvar a tebela..");
         }
 
     }
@@ -67,9 +65,7 @@ public class EmpresaDAO {
     public void removerEmpresa(){
         try {
             write.delete(DbHelper.TABELA_EMPRESA, null, null);
-            Log.i("INFO_DB", "onCreate: Sucesso ao remover a tebela.");
         } catch (Exception e) {
-            Log.i("INFO_DB", "onCreate: Erro ao remover a tebela..");
         }
     }
 

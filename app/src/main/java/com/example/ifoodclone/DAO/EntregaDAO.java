@@ -30,9 +30,7 @@ public class EntregaDAO {
 
         try {
             write.insert(DbHelper.TABELA_ENTREGA, null, cv);
-            Log.i("INFO_DB", "onCreate: Sucesso ao salvar a tebela.");
         } catch (Exception e) {
-            Log.i("INFO_DB", "onCreate: Erro ao salvar a tebela..");
         }
 
     }
@@ -47,9 +45,7 @@ public class EntregaDAO {
 
         try {
             write.update(DbHelper.TABELA_ENTREGA, cv, null, null);
-            Log.i("INFO_DB", "onCreate: Sucesso ao atualizar o endereço.");
         } catch (Exception e) {
-            Log.i("INFO_DB", "onCreate: Erro ao atualizar o endereço");
         }
 
     }
@@ -61,9 +57,7 @@ public class EntregaDAO {
 
         try {
             write.update(DbHelper.TABELA_ENTREGA, cv, null, null);
-            Log.i("INFO_DB", "onCreate: Sucesso ao atualizar a tabela.");
         } catch (Exception e) {
-            Log.i("INFO_DB", "onCreate: Erro ao atualizar a tabela..");
         }
 
     }

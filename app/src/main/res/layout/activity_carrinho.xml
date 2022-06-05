@@ -111,10 +111,12 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <androidx.recyclerview.widget.RecyclerView
+                <com.tsuryo.swipeablerv.SwipeableRecyclerView
                     android:id="@+id/rv_produtos"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    app:leftBgColor="@color/cor_padrao"
+                    app:leftImage="@drawable/ic_delete"/>
 
 
                 <Button

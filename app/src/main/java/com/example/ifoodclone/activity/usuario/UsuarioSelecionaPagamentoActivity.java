@@ -62,7 +62,9 @@ public class UsuarioSelecionaPagamentoActivity extends AppCompatActivity impleme
                 if (snapshot.exists()) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         Pagamento pagamento = ds.getValue(Pagamento.class);
-                        pagamentoList.add(pagamento);
+                        if (pagamento.getStatus()) {
+                            pagamentoList.add(pagamento);
+                        }
                     }
                     text_info.setText("");
                 } else {

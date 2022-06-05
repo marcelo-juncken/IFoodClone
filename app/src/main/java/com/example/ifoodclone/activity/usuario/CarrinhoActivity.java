@@ -41,6 +41,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
+import com.tsuryo.swipeablerv.SwipeableRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,7 +57,7 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoAdapt
     private final List<Produto> produtoList = new ArrayList<>();
     private List<ItemPedido> itemPedidoList = new ArrayList<>();
 
-    private RecyclerView rv_produtos;
+    private SwipeableRecyclerView rv_produtos;
     private CarrinhoAdapter carrinhoAdapter;
     private RecyclerView rv_add_mais;
     private ProdutoCarrinhoAdapter produtoCarrinhoAdapter;
@@ -131,8 +133,6 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoAdapt
         text_total_produto_dialog.setText(getString(R.string.text_valor, GetMask.getValor(itemPedido.getValor() * itemPedido.getQuantidade())));
 
 
-
-
         text_revisa_detalhes_item.setOnClickListener(v -> {
             Intent intent = new Intent(this, EmpresaProdutoDetalhesActivity.class);
             startActivity(intent);
@@ -164,7 +164,8 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoAdapt
                     text_atualizar.setText("Remover item");
                     text_total_produto_dialog.setVisibility(View.GONE);
                     text_atualizar.setGravity(Gravity.CENTER);
-                    if(produtoList.isEmpty()) findViewById(R.id.l_peca_mais).setVisibility(View.VISIBLE);
+                    if (produtoList.isEmpty())
+                        findViewById(R.id.l_peca_mais).setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -184,14 +185,8 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoAdapt
                 carrinhoAdapter.notifyDataSetChanged();
                 bottomSheetDialog.dismiss();
             }
-
         });
-
-
     }
-
-
-
 
     private void configSaldoCarrinho() {
         double subTotal = 0;
@@ -222,6 +217,14 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoAdapt
                         if (snapshot.exists()) {
                             for (DataSnapshot ds : snapshot.getChildren()) {
                                 endereco = ds.getValue(Endereco.class);
+                                if (entregaDAO.getEndereco() != null) {
+                                    if (endereco.getLogradouro().equals(entregaDAO.getEndereco().getLogradouro())
+                                            && endereco.getReferencia().equals(entregaDAO.getEndereco().getReferencia())
+                                            && endereco.getMunicipio().equals(entregaDAO.getEndereco().getMunicipio())
+                                            && endereco.getBairro().equals(entregaDAO.getEndereco().getBairro())) {
+                                        break;
+                                    }
+                                }
                             }
 
                             if (entregaDAO.getEndereco() == null) {
@@ -278,13 +281,18 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoAdapt
             text_referencia.setText(endereco.getReferencia());
             ll_endereco.setVisibility(View.VISIBLE);
         }
-        configStatus();
+        configPagamento();
 
     }
 
     private void configPagamento() {
-        text_forma_pagamento.setText(pagamento.getDescricao());
-        text_forma_pagamento.setTextColor(Color.parseColor("#000000"));
+        if(entregaDAO.getEntrega().getFormaPagamento()!=null) {
+            if (!entregaDAO.getEntrega().getFormaPagamento().isEmpty()) {
+                text_forma_pagamento.setText(entregaDAO.getEntrega().getFormaPagamento());
+                text_forma_pagamento.setTextColor(Color.parseColor("#000000"));
+            }
+        }
+
         configStatus();
     }
 
@@ -293,7 +301,7 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoAdapt
             if (endereco == null) {
                 btn_continuar.setText("Selecione o endereço");
             } else {
-                if (pagamento == null) {
+                if (entregaDAO.getEntrega().getFormaPagamento().isEmpty()) {
                     btn_continuar.setText("Escolher a forma de pagamento");
                 } else {
                     text_escolher.setText("Trocar");
@@ -320,6 +328,7 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoAdapt
                 if (produtoList.size() == 0) {
                     findViewById(R.id.l_peca_mais).setVisibility(View.GONE);
                 } else {
+                    findViewById(R.id.l_peca_mais).setVisibility(View.VISIBLE);
                     Collections.reverse(produtoList);
                     produtoCarrinhoAdapter.notifyDataSetChanged();
                 }
@@ -335,7 +344,9 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoAdapt
     private void configCliques() {
         findViewById(R.id.ib_voltar).setOnClickListener(v -> finish());
         findViewById(R.id.btn_esvaziar).setOnClickListener(v -> {
-            itemPedidoDAO.limparCarrinho();
+            itemPedidoDAO.removerTodos();
+            empresaDAO.removerEmpresa();
+            if (entregaDAO.getEntrega().getFormaPagamento() != null) entregaDAO.salvarPagamento("");
             finish();
         });
         ll_endereco.setOnClickListener(v -> {
@@ -351,8 +362,13 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoAdapt
         btn_continuar.setOnClickListener(v -> continuar());
 
         text_escolher.setOnClickListener(v -> {
-            Intent intent = new Intent(this, UsuarioSelecionaPagamentoActivity.class);
-            startActivityForResult(intent, REQUEST_PAGAMENTO);
+            if(FirebaseHelper.getAutenticado()) {
+                Intent intent = new Intent(this, UsuarioSelecionaPagamentoActivity.class);
+                startActivityForResult(intent, REQUEST_PAGAMENTO);
+            }else{
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivityForResult(intent, REQUEST_LOGIN);
+            }
         });
     }
 
@@ -361,9 +377,11 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoAdapt
             if (endereco == null) {
                 Intent intent = new Intent(this, UsuarioSelecionaEnderecoActivity.class);
                 startActivityForResult(intent, REQUEST_ENDERECO);
-            } else if (pagamento == null) {
+            } else if (entregaDAO.getEntrega().getFormaPagamento().isEmpty()) {
                 Intent intent = new Intent(this, UsuarioSelecionaPagamentoActivity.class);
                 startActivityForResult(intent, REQUEST_PAGAMENTO);
+            } else {
+                startActivity(new Intent(this, UsuarioResumoPedidoActivity.class));
             }
         } else {
             Intent intent = new Intent(this, LoginActivity.class);
@@ -377,12 +395,55 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoAdapt
         rv_produtos.setHasFixedSize(true);
         carrinhoAdapter = new CarrinhoAdapter(itemPedidoList, getBaseContext(), this);
         rv_produtos.setAdapter(carrinhoAdapter);
+
+        rv_produtos.setListener(new SwipeLeftRightCallback.Listener() {
+            @Override
+            public void onSwipedLeft(int position) {
+
+            }
+
+            @Override
+            public void onSwipedRight(int position) {
+                showBottomSheetRemoveDialog(position);
+            }
+        });
+
+
         rv_add_mais.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         rv_add_mais.setHasFixedSize(true);
         produtoCarrinhoAdapter = new ProdutoCarrinhoAdapter(produtoList, getBaseContext(), this);
         rv_add_mais.setAdapter(produtoCarrinhoAdapter);
 
     }
+
+    private void showBottomSheetRemoveDialog(int position) {
+        View view = getLayoutInflater().inflate(R.layout.bottom_dialog_remover_item_carrinho, null);
+        BottomSheetDialog bottomSheetDialogRemove = new BottomSheetDialog(this, R.style.BottomSheetDialog);
+        bottomSheetDialogRemove.setContentView(view);
+        bottomSheetDialogRemove.setOnDismissListener(dialog -> {
+            carrinhoAdapter.notifyDataSetChanged();
+        });
+        bottomSheetDialogRemove.show();
+
+        TextView text_remover = view.findViewById(R.id.text_remover);
+        TextView text_cancelar = view.findViewById(R.id.text_cancelar);
+
+        text_cancelar.setOnClickListener(v -> {
+            bottomSheetDialogRemove.dismiss();
+        });
+
+        text_remover.setOnClickListener(v -> {
+            Long id = itemPedidoList.get(position).getId();
+            itemPedidoList.remove(position);
+            itemPedidoDAO.remover(id);
+            recuperaIdsItensAddMais();
+            configSaldoCarrinho();
+            bottomSheetDialogRemove.dismiss();
+        });
+
+    }
+
+    ;
 
     private void iniciaComponentes() {
         TextView text_toolbar = findViewById(R.id.text_toolbar);
@@ -424,8 +485,8 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoAdapt
         itemPedidoPecaMais.setObservacao("");
         itemPedidoPecaMais.setQuantidade(1);
 
-        itemPedidoDAO.salvar(itemPedidoPecaMais);
-        itemPedidoPecaMais.setId(itemPedidoDAO.getList().get(itemPedidoDAO.getList().size()-1).getId());
+
+        itemPedidoPecaMais.setId(itemPedidoDAO.salvar(itemPedidoPecaMais));
         itemPedidoList.add(itemPedidoPecaMais);
 
         carrinhoAdapter.notifyDataSetChanged();
@@ -434,7 +495,7 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoAdapt
             produtoList.remove(produto);
             produtoCarrinhoAdapter.notifyDataSetChanged();
 
-            if(produtoList.isEmpty()) findViewById(R.id.l_peca_mais).setVisibility(View.GONE);
+            if (produtoList.isEmpty()) findViewById(R.id.l_peca_mais).setVisibility(View.GONE);
         }
         configSaldoCarrinho();
 
@@ -456,8 +517,8 @@ public class CarrinhoActivity extends AppCompatActivity implements CarrinhoAdapt
                 configEndereco();
             } else if (requestCode == REQUEST_PAGAMENTO) {
                 pagamento = (Pagamento) data.getSerializableExtra("pagamentoSelecionado");
-                configPagamento();
                 entregaDAO.salvarPagamento(pagamento.getDescricao());
+                configPagamento();
             }
         }
     }

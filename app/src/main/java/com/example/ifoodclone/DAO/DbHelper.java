@@ -65,9 +65,7 @@ public class DbHelper extends SQLiteOpenHelper {
             db.execSQL(TABLE_EMPRESA);
             db.execSQL(TABLE_ITEM_PEDIDO);
             db.execSQL(TABLE_ENTREGA);
-            Log.i("INFO_DB", "onCreate: Tabela criada com sucesso.");
         } catch (Exception e) {
-            Log.i("INFO_DB", "onCreate: Erro ao criar tabela.");
         }
 
     }

@@ -22,8 +22,8 @@ public class ItemPedidoDAO {
         read = dbHelper.getReadableDatabase();
     }
 
-    public void salvar(ItemPedido itemPedido) {
-
+    public long salvar(ItemPedido itemPedido) {
+        long id = 0;
         ContentValues cv = new ContentValues();
         cv.put(DbHelper.COLUNA_ID_FIREBASE, itemPedido.getIdItem());
         cv.put(DbHelper.COLUNA_NOME, itemPedido.getItem());
@@ -32,11 +32,10 @@ public class ItemPedidoDAO {
         cv.put(DbHelper.COLUNA_QUANTIDADE, itemPedido.getQuantidade());
         cv.put(DbHelper.COLUNA_OBSERVACAO, itemPedido.getObservacao());
         try {
-            write.insert(DbHelper.TABELA_ITEM_PEDIDO, null, cv);
-            Log.i("INFO_DB", "onCreate: Sucesso ao salvar a tebela.");
+            id = write.insert(DbHelper.TABELA_ITEM_PEDIDO, null, cv);
         } catch (Exception e) {
-            Log.i("INFO_DB", "onCreate: Erro ao salvar a tebela..");
         }
+        return id;
     }
 
     public void atualizar(ItemPedido itemPedido) {
@@ -47,9 +46,7 @@ public class ItemPedidoDAO {
             String where = "id=?";
             String[] args = {String.valueOf(itemPedido.getId())};
             write.update(DbHelper.TABELA_ITEM_PEDIDO, cv, where, args);
-            Log.i("INFO_DB", "onCreate: Sucesso ao atualizar a tebela.");
         } catch (Exception e) {
-            Log.i("INFO_DB", "onCreate: Erro ao atualizar a tebela..");
         }
     }
 
@@ -83,42 +80,36 @@ public class ItemPedidoDAO {
         return itemPedidoList;
     }
 
-    public Double getTotal(){
+    public Double getTotal() {
         double total = 0;
-        for (ItemPedido itemPedido : getList()){
+        for (ItemPedido itemPedido : getList()) {
             total += itemPedido.getValor() * itemPedido.getQuantidade();
         }
         return total;
     }
 
-    public void remover(Long id){
+    public void remover(Long id) {
         try {
             String where = "id=?";
             String[] args = {String.valueOf(id)};
             write.delete(DbHelper.TABELA_ITEM_PEDIDO, where, args);
-            Log.i("INFO_DB", "onCreate: Sucesso ao deletar item.");
         } catch (Exception e) {
-            Log.i("INFO_DB", "onCreate: Erro ao deletar item.");
         }
     }
 
-    public void removerTodos(){
+    public void removerTodos() {
         try {
             write.delete(DbHelper.TABELA_ITEM_PEDIDO, null, null);
-            Log.i("INFO_DB", "onCreate: Sucesso ao deletar todos os itens.");
         } catch (Exception e) {
-            Log.i("INFO_DB", "onCreate: Erro ao deletar todos os itens.");
         }
     }
 
-    public void limparCarrinho(){
+    public void limparCarrinho() {
         try {
             write.delete(DbHelper.TABELA_EMPRESA, null, null);
             write.delete(DbHelper.TABELA_ENTREGA, null, null);
             write.delete(DbHelper.TABELA_ITEM_PEDIDO, null, null);
-            Log.i("INFO_DB", "onCreate: Sucesso ao limpar o carrinho.");
         } catch (Exception e) {
-            Log.i("INFO_DB", "onCreate: Erro ao limpar o carrinho.");
         }
     }
 

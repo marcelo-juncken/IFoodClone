@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.ifoodclone.DAO.EmpresaDAO;
+import com.example.ifoodclone.DAO.EntregaDAO;
 import com.example.ifoodclone.DAO.ItemPedidoDAO;
 import com.example.ifoodclone.R;
 import com.example.ifoodclone.activity.usuario.CarrinhoActivity;
@@ -64,6 +65,7 @@ public class UsuarioDetalhesProdutoFragment extends Fragment {
 
     private EmpresaDAO empresaDAO;
     private ItemPedidoDAO itemPedidoDAO;
+    private EntregaDAO entregaDAO;
 
     private int quantidade = 1;
     private String observacao;
@@ -83,6 +85,7 @@ public class UsuarioDetalhesProdutoFragment extends Fragment {
 
         empresaDAO = new EmpresaDAO(getContext());
         itemPedidoDAO = new ItemPedidoDAO(getContext());
+        entregaDAO = new EntregaDAO(getContext());
         iniciaComponentes(view);
 
         Bundle bundle = getActivity().getIntent().getExtras();
@@ -99,6 +102,9 @@ public class UsuarioDetalhesProdutoFragment extends Fragment {
     private void addItemCarrinho() {
         if (empresaDAO.getEmpresa() != null) {
             if (empresaDAO.getEmpresa().getId().equals(produto.getIdEmpresa())) {
+                salvarProduto();
+            } else if (itemPedidoDAO.getList().isEmpty()) {
+                empresaDAO.removerEmpresa();
                 salvarProduto();
             } else {
                 snackbarEsvaziarCarrinho();
@@ -141,6 +147,7 @@ public class UsuarioDetalhesProdutoFragment extends Fragment {
     private void esvaziaCarrinho() {
         empresaDAO.removerEmpresa();
         itemPedidoDAO.removerTodos();
+
         salvarProduto();
         snackbar.dismiss();
     }
@@ -158,10 +165,16 @@ public class UsuarioDetalhesProdutoFragment extends Fragment {
         observacao = edit_observacao.getText().toString().trim();
         if (observacao.isEmpty()) observacao = "";
         itemPedido.setObservacao(observacao);
-        Log.i("INFOTESTE", "A " + observacao);
         itemPedidoDAO.salvar(itemPedido);
 
-        if (empresaDAO.getEmpresa() == null) empresaDAO.salvar(empresa);
+        if (empresaDAO.getEmpresa() == null) {
+            empresaDAO.salvar(empresa);
+            Log.i("INFOTESTE", "salvarProduto: entrou 1");
+            if (entregaDAO != null) {
+                entregaDAO.salvarPagamento("");
+                Log.i("INFOTESTE", "salvarProduto: entrou 2");
+            }
+        }
 
         Intent intent = new Intent(getContext(), CarrinhoActivity.class);
         startActivityForResult(intent, REQUEST_CARRINHO);
@@ -172,7 +185,6 @@ public class UsuarioDetalhesProdutoFragment extends Fragment {
         Snackbar snackbarProdAdd = Snackbar.make(btn_adicionar, "Produto adicionado com sucesso!", Snackbar.LENGTH_LONG);
         snackbarProdAdd.setAction("Desfazer", v -> {
             desfazerProduto(itemPedido);
-            Log.i("INFOTESTE", "snackbarProdutoAdicionado: " + itemPedido.getId() + " - " + itemPedido.getItem() + " - " + itemPedido.getItem());
         });
 
         TextView text_snack_bar = snackbarProdAdd.getView().findViewById(com.google.android.material.R.id.snackbar_text);
@@ -324,6 +336,7 @@ public class UsuarioDetalhesProdutoFragment extends Fragment {
         cl_observacao = view.findViewById(R.id.cl_observacao);
 
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
